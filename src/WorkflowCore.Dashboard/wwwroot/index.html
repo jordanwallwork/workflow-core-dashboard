@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WorkflowCore Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+</head>
+
+<body x-data="dashboard()" x-init="init()">
+
+    <header>
+        <h1>WorkflowCore Dashboard</h1>
+    </header>
+
+    <aside x-cloak>
+        <nav x-show="$store.definitions.list !== null">
+            <header>Workflows</header>
+            <ul>
+                <template x-for="def in $store.definitions.list">
+                    <li><a x-link.activity x-bind:href="'#/definitions/' + def.id" x-text="def.id"></a></li>
+                </template>
+            </ul>
+        </nav>
+    </aside>
+
+    <main x-cloak>
+
+        <template x-route="/definitions/:id">
+            <div>
+                <h2 x-text="$router.params.id"></h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Started</th>
+                            <th>Status</th>
+                            <th>Completed</th>
+                            <th>Next Execution</th>
+                            <th>Version</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+    </main>
+
+    <script src="index.js"></script>
+    <script src="https://unpkg.com/@shaun/alpinejs-router@1.x.x/dist/cdn.min.js" defer></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+</body>
+</html>
