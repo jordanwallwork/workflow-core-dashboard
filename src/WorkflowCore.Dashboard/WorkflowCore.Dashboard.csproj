@@ -1,9 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Workflow Core Dashboard</Title>
+    <AssemblyVersion>0.0.1</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <Version>$(AssemblyVersion)</Version>
+    <Authors>Jordan Wallwork</Authors>
+    <Description>Simple dashboard to visualise Workflow Core state</Description>
+    <PackageProjectUrl>https://github.com/jordanwallwork/workflow-core-dashboard</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/jordanwallwork/workflow-core-dashboard</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +32,17 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

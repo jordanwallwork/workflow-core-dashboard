@@ -2,6 +2,18 @@
 
 Simple dashboard to visualise [Workflow Core](https://github.com/danielgerlag/workflow-core) state
 
+## Installation
+
+Install the NuGet package "[WorkflowCore.Dashboard](https://www.nuget.org/packages/WorkflowCore.Dashboard)"
+
+Using NuGet
+
+	PM> Install-Package WorkflowCore.Dashboard
+	
+Using .net cli
+
+	dotnet add package WorkflowCore.Dashboard
+
 ## Usage
 
 Add the dashboard to your application by adding `UseWorkflowCoreDashboard()`:
@@ -34,7 +46,7 @@ You can pass a `DashboardConfig` into the `UseWorkflowCoreDashboard()`
 
 Workflow Core Dashboard is in early development. Still todo:
 
- - List workflows, with filtering + search capabilities
+ - More workflow detail, filtering + search capabilities
  - List events, with filtering + search capabilities
  - List errors, with filtering + search capabilities
  - Overview of specific workflow instance. Show current status, step history, state etc
