@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WorkflowCore Dashboard</title>
     <link rel="stylesheet" type="text/css" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,15 +14,15 @@
 <body x-data="dashboard()" x-init="init()">
 
     <header>
-        <h1>WorkflowCore Dashboard</h1>
+        <h1><a x-link href="">Workflow Core Dashboard</a></h1>
     </header>
 
-    <aside x-cloak>
-        <nav x-show="$store.definitions.list !== null">
+    <aside>
+        <nav x-cloak>
             <header>Workflows</header>
             <ul>
-                <template x-for="def in $store.definitions.list">
-                    <li><a x-link.activity x-bind:href="'#/definitions/' + def.id" x-text="def.id"></a></li>
+                <template x-for="def in ($store.definitions.list ?? [])">
+                    <li><a x-link.activity :href="`#/workflows/${def.id}`" x-text="def.id"></a></li>
                 </template>
             </ul>
         </nav>
@@ -29,8 +30,15 @@
 
     <main x-cloak>
 
-        <template x-route="/definitions/:id">
+        <template x-route="">
             <div>
+                <h2>Workflow Core Dashboard</h2>
+                <p>◄ Select a workflow from the left to get started</p>
+            </div>
+        </template>
+
+        <template x-route="/workflows/:id">
+            <div x-init="loadWorkflows($router.params.id)">
                 <h2 x-text="$router.params.id"></h2>
                 <table>
                     <thead>
@@ -39,14 +47,52 @@
                             <th>Started</th>
                             <th>Status</th>
                             <th>Completed</th>
-                            <th>Next Execution</th>
                             <th>Version</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
+                        <template x-for="instance in ($store.workflows.instances ?? [])">
+                            <tr>
+                                <td x-text="instance.id"></td>
+                                <td x-text="formatDateTime(instance.started)"></td>
+                                <td><span x-text="instance.status" :class="`status ${instance.status.toLowerCase()}`"></span></td>
+                                <td x-text="formatDateTime(instance.completed)"></td>
+                                <td x-text="instance.version"></td>
+                                <td>
+                                    <a class="btn" x-link :href="`#/workflows/${$router.params.id}/${instance.id}`">View</a>
+                                </td>
+                            </tr>
+                        </template>
+                        <tr x-show="$store.workflows.instances === null">
+                            <td colspan="6">Loading...</td>
+                        </tr>
                     </tbody>
                 </table>
+            </div>
+        </template>
+
+        <template x-route="/workflows/:defId/:instanceId">
+            <div x-init="loadWorkflowDetail($router.params.defId, $router.params.instanceId)">
+
+                <div x-text="$store.workflow.detail.status" :class="`status ${$store.workflow.detail.status.toLowerCase()}`" style="float:right"></div>
+
+                <h2 x-text="`${$router.params.instanceId} (v${$store.workflow.detail.version})`"></h2>
+
+                <ul class="details">
+                    <li><strong>Started: </strong> <span x-text="formatDateTime($store.workflow.detail.started)"></span></li>
+                    <li x-show="!!$store.workflow.detail.completed"><strong>Completed: </strong> <span x-text="formatDateTime($store.workflow.detail.completed)"></span></li>
+                </ul>
+
+                <h3>Data</h3>
+                <pre x-text="JSON.stringify($store.workflow.detail?.data ?? {}, null, 2)"></pre>
+
+            </div>
+        </template>
+
+        <template x-route.notfound>
+            <div class="error-banner">
+                Error 404 not found
             </div>
         </template>
     </main>

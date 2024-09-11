@@ -27,6 +27,7 @@ public static class DependencyInjection
 
                 endpoints.MapFileEndpoints();
                 endpoints.MapDefinitionEndpoints();
+                endpoints.MapWorkflowEndpoints();
             });
         });
     }
