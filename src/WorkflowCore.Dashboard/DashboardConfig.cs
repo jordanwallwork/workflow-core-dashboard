@@ -1,10 +1,11 @@
-﻿using WorkflowCore.Dashboard.Permissions;
-using WorkflowCore.Dashboard.Permissions.Managers;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace WorkflowCore.Dashboard;
 
 public class DashboardConfig
 {
     public string RoutePrefix { get; set; } = "/wfc-dashboard";
-    public IPermissionManagerResolver PermissionManagerResolver { get; set; } = new PermissionManagerResolver<AllowLocalAccessPermissionManager>();
+
+    public Type? PermissionManager { get; set; }
+    public ServiceLifetime? PermissionManagerLifetime { get; set; }
 }

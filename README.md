@@ -6,7 +6,7 @@ Simple dashboard to visualise [Workflow Core](https://github.com/danielgerlag/wo
 
 ## Installation
 
-Install the NuGet package "[WorkflowCore.Dashboard](https://www.nuget.org/packages/WorkflowCore.Dashboard)"
+Install the NuGet package "[WorkflowCore.Dashboard](https://www.nuget.org/packages/WorkflowCore.Dashboard)" 
 
 Using NuGet
 
@@ -15,6 +15,8 @@ Using NuGet
 Using .net cli
 
 	dotnet add package WorkflowCore.Dashboard
+
+![NuGet Version](https://img.shields.io/nuget/v/WorkflowCore.Dashboard) ![NuGet Downloads](https://img.shields.io/nuget/dt/WorkflowCore.Dashboard)
 
 ## Usage
 
@@ -28,9 +30,6 @@ public void ConfigureServices(IServiceCollection services)
     
     // Register with DI container
     services.AddWorkflowCoreDashboard(/*optionally pass in DashboardConfig here*/);
-    
-    // if using a custom IPermissionManager, ensure it is also registered
-    // services.AddTransient<CustomPermissionResolver>();
     
     ...
 }
@@ -56,16 +55,17 @@ By default you can access the dashboard at `/wfc-dashboard` (this path is config
 
 You can pass a `DashboardConfig` into the `UseWorkflowCoreDashboard()`
 
-| Property                  | Default Value                     | Notes                                                                 |
-|---------------------------|-----------------------------------|-----------------------------------------------------------------------|
-| RoutePrefix               | /wfc-dashboard                    | Change this if you want to expose the dashboard on a different path   |
-| PermissionManagerResolver | AllowLocalAccessPermissionManager | Default permissions will only authorize api access for local requests |
+| Property                  | Type                                     | Default Value                     | Notes                                                                 |
+|---------------------------|------------------------------------------|-----------------------------------|-----------------------------------------------------------------------|
+| RoutePrefix               | string                                   | /wfc-dashboard                    | Change this if you want to expose the dashboard on a different path   |
+| PermissionManager         | Type (must implement IPermissionManager) | AllowLocalAccessPermissionManager | Default permissions will only authorize api access for local requests |
+| PermissionManagerLifetime | ServiceLifetime                          |                                   | If provided, will register the permission manager with the DI container. Otherwise, will assume permission manager will be registered elsewhere |
 
 ## Authorization
 
 By default, the api will authorize access only to local requests, and users will have full access permissions.
 
-You can easily change authorization behaviour with the PermissionManageResolver option in the DashboardConfig. You will need to implement a new permision manager which implements the very simple IPermissionManager interface, and ensure it's registered it with the DI container.
+You can easily change authorization behaviour by implementing a new `IPermissionManager`. If you specify a lifetime then it will be registered with the DI container, otherwise it is assumed that it will be registered elsewhere.
 
 ### Sample Custom IPermissionManager
 
@@ -88,10 +88,9 @@ public class CustomPermissionManager(IMyUserContext userContext) : IPermissionMa
 ```csharp
 services.AddWorkflowCoreDashboard(new DashboardConfig()
 {
-	PermissionManagerResolver = new PermissionManagerResolver<CustomPermissionManager>()
+	PermissionManager = typeof(CustomPermissionManager),
+	PermissionManagerLifetime = ServiceLifetime.Scoped // not required if the IPermissionManager is registered with the DI container elsewhere
 };
-
-services.AddTransient<CustomPermissionManager>();
 ```
 
 ## TODO

@@ -14,9 +14,21 @@ public static class DependencyInjection
         config ??= new();
 
         serviceCollection.AddTransient(sp => config ?? new());
-        serviceCollection.AddTransient(config.PermissionManagerResolver.Resolve);
-        serviceCollection.AddSingleton<IAuthorizationPolicyProvider, RequirePermissionPolicyProvider>();
-        serviceCollection.AddSingleton<IAuthorizationHandler, RequirePermissionAuthHandler>();
+
+        if (config.PermissionManager is null)
+        {
+            serviceCollection.AddTransient<IPermissionManager, AllowLocalAccessPermissionManager>();
+        }
+        else
+        {
+            if (config.PermissionManagerLifetime is not null)
+            {
+                serviceCollection.Add(new(typeof(IPermissionManager), config.PermissionManager, (config.PermissionManagerLifetime ?? ServiceLifetime.Transient)));
+            }
+        }
+
+        serviceCollection.AddTransient<IAuthorizationPolicyProvider, RequirePermissionPolicyProvider>();
+        serviceCollection.AddTransient<IAuthorizationHandler, RequirePermissionAuthHandler>();
         serviceCollection.AddTransient<AllowLocalAccessPermissionManager>();
 
         return serviceCollection;
