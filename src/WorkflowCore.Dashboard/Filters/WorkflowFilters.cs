@@ -1,6 +1,7 @@
 ﻿using WorkflowCore.Models;
 
 namespace WorkflowCore.Dashboard.Filters;
+
 public class WorkflowFilters
 {
     public int Page { get; set; } = 1;

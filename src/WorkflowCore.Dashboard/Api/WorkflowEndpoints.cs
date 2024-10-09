@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using WorkflowCore.Dashboard.Dtos;
 using WorkflowCore.Dashboard.Filters;
+using WorkflowCore.Dashboard.Permissions;
 using WorkflowCore.Interface;
 
 namespace WorkflowCore.Dashboard.Api;
@@ -13,7 +14,7 @@ public static class WorkflowEndpoints
 
     public static void MapWorkflowEndpoints(this IEndpointRouteBuilder app)
     {
-        var endpoints = app.MapGroup("/workflows/{definitionId}");
+        var endpoints = app.MapGroup("/workflows/{definitionId}").RequirePermission(Permission.ViewWorkflowInstances);
 
         endpoints.MapGet("/", Search);
         endpoints.MapGet("/{instanceId}", Get);
